@@ -1,0 +1,6 @@
+#Altium Libraries
+*.SchLib
+*.PcbLib
+
+#Compilation Output
+bin/*
