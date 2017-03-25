@@ -27,14 +27,15 @@ const uint8_t OT_STREAM     = 0x02;
 const uint8_t OT_ROOT       = 0x05;
 
 // Header is 512 bytes
+#define CFB_HEADER_SIZE 512
 // Contains map of structure for the rest of the file
 // Since the Altium libraries are small, there's not a lot to worry about
-typedef struct header_t
+#pragma pack(push, 1)
+struct header_t
 {
-    uint8_t magic[8];
+    uint64_t magic;
     uint8_t uid[16];
-    uint8_t revision_number[2];
-    uint8_t version_number[2];
+    uint16_t version_number[2];
     uint16_t byte_order;
     uint16_t sec_size;
     uint16_t short_sec_size;
@@ -49,10 +50,13 @@ typedef struct header_t
     uint32_t master_sec_count;
     uint32_t master_sec_ids[109];
 };
+#pragma pack(pop)
 
 // Each Directory Entry is 128 bytes
+#define CFB_DIR_ENTRY_SIZE  128
 // The directory entries comprise a red-black tree
-typedef struct directory_entry_t
+#pragma pack(push, 1)
+struct directory_entry_t
 {
     char16_t entry_name[32];
     uint16_t size_of_name_buffer;
@@ -69,5 +73,6 @@ typedef struct directory_entry_t
     uint32_t total_stream_size;
     uint32_t spare1;
 };
+#pragma pack(pop)
 
 #endif // CSB_TYPES_H
