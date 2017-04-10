@@ -13,9 +13,9 @@
 #include "boost/filesystem/fstream.hpp"
 
 // Sector Allocation Table
-// Starts at sector 0 (post-header) and should comprise a single sector
-// TODO: This isn't true for all CFB files, so check the header MSAT...
-int32_t sat[128];
+// Starts at sector 0 (post-header)
+// May comprise more than one sector based on the MSAT in the header
+std::vector<int32_t> sector_alloc_table;
 
 header_t header;
 
@@ -33,6 +33,9 @@ std::vector<directory_entry_t> dir_entries;
 // Returns true if it read a directory entry
 // Returns false if there wasn't one or it wasn't valid
 void read_next_directory_entry(std::ifstream &cfb_file);
+
+// Prints the information for a directory entry specified by 'at_index'
+void print_directory_entry(size_t at_index);
 
 
 

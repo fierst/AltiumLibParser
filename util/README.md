@@ -7,5 +7,4 @@ While I'm trying to keep this as portable as possible, there may be some platfor
 ### Programs
 * **print_header_info**: print relevant information from the header 
 
-* **direntries**: populate the directory entries table and print each one's name
-	* _currently a WIP, doesn't work for larger files!_
+* **direntries**: populate the directory entries table and print each one's information
