@@ -2,23 +2,25 @@
 // All of these should be outlined in doc/MSDN_CFB_Format_Spec.pdf
 // Or at https://msdn.microsoft.com/en-us/library/dd942138.aspx
 
+// TODO: Convert to classes, outline methods
+
 #ifndef CFB_TYPES_H
 #define CFB_TYPES_H
 
 // Sector ID Constants
-const uint32_t MAXREGSECT   = 0xFFFFFFFA;
-const uint32_t DIFSECT      = 0xFFFFFFFC;
-const uint32_t FATSECT      = 0xFFFFFFFD;
-const uint32_t ENDOFCHAIN   = 0xFFFFFFFE;
-const uint32_t FREESECT     = 0xFFFFFFFF;
+const int32_t MAXREGSECT   = 0xFFFFFFFA;
+const int32_t DIFSECT      = 0xFFFFFFFC;
+const int32_t FATSECT      = 0xFFFFFFFD;
+const int32_t ENDOFCHAIN   = 0xFFFFFFFE;
+const int32_t FREESECT     = 0xFFFFFFFF;
 
 // Directory Entry Color Flags
 const uint8_t CF_RED        = 0x00;
 const uint8_t CF_BLACK      = 0x01;
 
 // Directory Entry IDs
-const uint32_t MAXREGSID    = 0xFFFFFFFA;
-const uint32_t NOSTREAM     = 0xFFFFFFFF;
+const int32_t MAXREGSID    = 0xFFFFFFFA;
+const int32_t NOSTREAM     = 0xFFFFFFFF;
 
 // Directory Entry Object Types
 const uint8_t OT_UNKNOWN    = 0x00;
@@ -54,6 +56,7 @@ struct header_t
 
 // Each Directory Entry is 128 bytes
 #define CFB_DIR_ENTRY_SIZE  128
+
 // The directory entries comprise a red-black tree
 #pragma pack(push, 1)
 struct directory_entry_t
@@ -62,9 +65,9 @@ struct directory_entry_t
     uint16_t size_of_name_buffer;
     uint8_t entry_type;
     uint8_t node_color;
-    uint32_t dir_id_left;
-    uint32_t dir_id_right;
-    uint32_t dir_id_root;
+    int32_t dir_id_left;
+    int32_t dir_id_right;
+    int32_t dir_id_root;
     uint8_t uid[16];
     uint8_t flags[4];
     uint64_t created_time;
