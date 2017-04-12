@@ -73,13 +73,14 @@ bool altium_lib::get_library_entries(std::vector<std::string> & list_of_entries)
     list_of_entries.erase(list_of_entries.begin(), list_of_entries.end());
 
     std::string current_name;
+    bool is_keyword;
 
     for(size_t i = 0; i < dir_entry_tree.size(); i++)
     {
         current_name = dir_entry_tree.at(i).get_name();
+        is_keyword = (std::find(altium_lib_keywords.begin(), altium_lib_keywords.end(), current_name) != altium_lib_keywords.end());
 
-        if( dir_entry_tree.at(i).get_object_type() == dir_entry_object_type::STORAGE &&
-            altium_lib_keywords.find(current_name) == altium_lib_keywords.end())
+        if( dir_entry_tree.at(i).get_object_type() == dir_entry_object_type::STORAGE && !is_keyword)
         {
             list_of_entries.push_back(current_name);
         }

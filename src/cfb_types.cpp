@@ -25,15 +25,21 @@ void directory_entry::assign_bytes(uint8_t * dir_entry_bytes, size_t bytes_to_re
 std::string directory_entry::get_name()
 {
 	std::string name_string = "";
-	
+
 	// Find "name" entry in map
 	std::valarray<uint8_t> name_bytes = get_dir_entry_param_bytes("name");	
-	
+
+	// Get the length of the name string and trim the last char16_t because it's NULL
+	uint8_t name_length = get_dir_entry_param_bytes("name_length")[0] - sizeof(char16_t);
+
+	// Slice the name string into an appropriate length
+	std::valarray<uint8_t> sliced_name_bytes = name_bytes[std::slice(0, name_length, 1)];
+
 	// If we have at least one char16_t to read
 	if(name_bytes.size() > sizeof(char16_t))
 	{
 		// Convert it to a string because UTF-16 strings are very bad + unprintable
-		std::u16string u16name(reinterpret_cast<char16_t *>(&name_bytes[0]), name_bytes.size() / sizeof(char16_t));
+		std::u16string u16name(reinterpret_cast<char16_t *>(&sliced_name_bytes[0]), sliced_name_bytes.size() / sizeof(char16_t));
 		std::wstring_convert<std::codecvt_utf8<char16_t>, char16_t> conv;
 		name_string = std::string(conv.to_bytes(u16name));
 	}

@@ -21,11 +21,11 @@ int main(int argc, char * argv[])
 
     if(libfile.load_from_file())
     {
-    	std::cout << ">\tsucceeded\n";
+    	std::cout << ">>  succeeded\n";
     }
     else
     {
-    	std::cout << ">\tfailed!\n";
+    	std::cout << ">>  failed!\n";
     	return 1;
     }
 
@@ -35,7 +35,7 @@ int main(int argc, char * argv[])
 
     if(libfile.get_library_entries(lib_entities))
     {
-    	std::cout << ">\tsucceeded\n";
+    	std::cout << ">>  succeeded\n";
     	std::cout << "Entities:\n";
 
     	for(size_t i = 0; i < lib_entities.size(); i++)
@@ -45,7 +45,7 @@ int main(int argc, char * argv[])
     }
     else
     {
-    	std::cout << ">\tfailed! No entities found\n";
+    	std::cout << ">>  failed! No entities found\n";
     	return 1;
     }
 

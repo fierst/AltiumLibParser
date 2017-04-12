@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
-#include <unordered_set>
+#include <algorithm>
 
 namespace fs = boost::filesystem;
 
@@ -43,9 +43,9 @@ private:
 
     // Keywords used by Altium for the library, that are *not* symbol/footprint names
     // TODO: There must be a better way to figure out which are keywords and which are symbols/footprints...
-    std::unordered_set<std::string> altium_lib_keywords {"Library", "Models", "ModelsNoEmbed", 
-                                                         "Textures", "ComponentParamsTOC", "UniqueIDPrimitiveInformation",
-                                                         "FileVersionInfo", "PadViaLibrary"};
+    std::vector<std::string> altium_lib_keywords {"Library", "Models", "ModelsNoEmbed", 
+                                                  "Textures", "ComponentParamsTOC", "UniqueIDPrimitiveInformation",
+                                                  "FileVersionInfo", "PadViaLibrary"};
 
     // TODO: Convert to a red-black tree? That's how the CFB spec handles it...
     std::vector<directory_entry> dir_entry_tree;

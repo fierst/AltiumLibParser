@@ -90,7 +90,7 @@ public:
     // TODO: Allow format specifiers?
     std::string get_modified_time();
 
-    // Get the object type of the directory entry
+    // Get the object type of the directory entry 
     dir_entry_object_type get_object_type();
 
     // Return the sector id of the stream
