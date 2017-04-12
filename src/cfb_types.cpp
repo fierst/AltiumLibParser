@@ -40,10 +40,9 @@ std::string directory_entry::get_name()
 	{
 		// Convert it to a string because UTF-16 strings are very bad + unprintable
 		std::u16string u16name(reinterpret_cast<char16_t *>(&sliced_name_bytes[0]), sliced_name_bytes.size() / sizeof(char16_t));
-		std::wstring_convert<std::codecvt_utf8<char16_t>, char16_t> conv;
-		name_string = std::string(conv.to_bytes(u16name));
+		name_string = boost::locale::conv::utf_to_utf<char>(&u16name[0], &u16name[0] + u16name.length());
 	}
-
+	
 	// This string will be empty if there was no name found
 	return name_string;
 }

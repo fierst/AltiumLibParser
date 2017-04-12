@@ -6,9 +6,8 @@
 
 #include <map>
 #include <valarray>
-#include <string>   //--|
-#include <locale>   //  |-- THESE ARE ALL FOR UTF-16 PRINTING
-#include <codecvt>  //--|
+
+#include "boost/locale.hpp"
 
 // Sector ID Constants
 const int32_t MAXREGSECT   = 0xFFFFFFFA;
