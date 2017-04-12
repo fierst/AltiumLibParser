@@ -1,11 +1,14 @@
 // Types inherent to the CFB file format
 // All of these should be outlined in doc/MSDN_CFB_Format_Spec.pdf
 // Or at https://msdn.microsoft.com/en-us/library/dd942138.aspx
-
-// TODO: Convert to classes, outline methods
-
 #ifndef CFB_TYPES_H
 #define CFB_TYPES_H
+
+#include <map>
+#include <valarray>
+#include <string>   //--|
+#include <locale>   //  |-- THESE ARE ALL FOR UTF-16 PRINTING
+#include <codecvt>  //--|
 
 // Sector ID Constants
 const int32_t MAXREGSECT   = 0xFFFFFFFA;
@@ -28,20 +31,18 @@ const uint8_t OT_STORAGE    = 0x01;
 const uint8_t OT_STREAM     = 0x02;
 const uint8_t OT_ROOT       = 0x05;
 
-// Header is 512 bytes
-#define CFB_HEADER_SIZE 512
 // Contains map of structure for the rest of the file
-// Since the Altium libraries are small, there's not a lot to worry about
+// Since the Altium libraries are generally small, there's not a lot to worry about
 #pragma pack(push, 1)
 struct header_t
 {
     uint64_t magic;
-    uint8_t uid[16];
+    uint8_t  uid[16];
     uint16_t version_number[2];
     uint16_t byte_order;
     uint16_t sec_size;
     uint16_t short_sec_size;
-    uint8_t spare1[10];
+    uint8_t  spare1[10];
     uint32_t sec_count;
     uint32_t first_sec_id;
     uint32_t spare2;
@@ -54,28 +55,66 @@ struct header_t
 };
 #pragma pack(pop)
 
-// Each Directory Entry is 128 bytes
-#define CFB_DIR_ENTRY_SIZE  128
+// Each Directory Entry is 128 bytes in length
+const size_t CFB_DIR_ENTRY_SIZE = 128;
 
-// The directory entries comprise a red-black tree
-#pragma pack(push, 1)
-struct directory_entry_t
+// Directory Entry class
+// Each directory entry is part of a red-black tree
+// Currently only implemented methods required for the application
+class directory_entry
 {
-    char16_t entry_name[32];
-    uint16_t size_of_name_buffer;
-    uint8_t entry_type;
-    uint8_t node_color;
-    int32_t dir_id_left;
-    int32_t dir_id_right;
-    int32_t dir_id_root;
-    uint8_t uid[16];
-    uint8_t flags[4];
-    uint64_t created_time;
-    uint64_t modified_time;
-    uint32_t first_sec_id;
-    uint32_t total_stream_size;
-    uint32_t spare1;
-};
-#pragma pack(pop)
+public:
+    directory_entry();
+    directory_entry(const directory_entry &);
+    directory_entry(uint8_t * dir_entry_bytes, size_t bytes_to_read);
 
-#endif // CSB_TYPES_H
+    // Assign the directory entry bytes post-instantiation
+    void assign_bytes(uint8_t * dir_entry_bytes, size_t bytes_to_read);
+
+    // Return name string
+    std::string get_name();
+
+    // Return creation time in a human-readable string (YYYY-MM-DD hh:mm:ss)
+    // TODO: Allow format specifiers?
+    std::string get_creation_time();
+
+    // Return modification time in a human-readable string (YYYY-MM-DD hh:mm:ss)
+    // TODO: Allow format specifiers?
+    std::string get_modified_time();
+
+    // Return the sector id of the stream
+    uint32_t get_stream_sector_id();
+
+    // Return the size of the stream
+    uint32_t get_stream_size();
+
+private:
+
+    std::valarray<uint8_t> get_dir_entry_param_bytes(std::string param_key);
+
+    // Container for the raw bytes of the directory entry 
+    std::valarray<uint8_t> dir_entry_bytes;
+
+    // Map of parameters for the directory entry
+    // Key - Name of the requested parameter
+    // Value - std::pair<uint8_t, uint8_t> with the offset and number of bytes for the requested parameter 
+    std::map<std::string, std::pair<uint8_t, uint8_t>> dir_entry_params
+    {
+        std::make_pair("name",          std::make_pair(0,  64)),
+        std::make_pair("name_length",   std::make_pair(64,  2)),
+        std::make_pair("type",          std::make_pair(66,  1)),
+        std::make_pair("color",         std::make_pair(67,  1)),
+        std::make_pair("l_sibling_id",  std::make_pair(68,  4)),
+        std::make_pair("r_sibling_id",  std::make_pair(72,  4)),
+        std::make_pair("child_id",      std::make_pair(76,  4)),
+        std::make_pair("clsid",         std::make_pair(80, 16)),
+        std::make_pair("user_flags",    std::make_pair(96,  4)),
+        std::make_pair("time_created",  std::make_pair(100, 8)),
+        std::make_pair("time_modified", std::make_pair(108, 8)),
+        std::make_pair("stream_sec_id", std::make_pair(116, 4)),
+        std::make_pair("stream_size",   std::make_pair(120, 4)),
+        std::make_pair("spare",         std::make_pair(124, 4))
+    };
+};
+
+#endif // CFB_TYPES_H

@@ -95,8 +95,6 @@ void build_dir_entry_chain(std::ifstream &cfb_file)
     {
         offset = (1 + current_sector) * (sector_size);
 
-        std::cout << ">>\tCurrent Sector: " << current_sector << '\n';
-
         cfb_file.seekg(offset, std::ios::beg);
 
         for(uint8_t i = 0; i < dir_entries_per_sector; i++)
@@ -110,66 +108,16 @@ void build_dir_entry_chain(std::ifstream &cfb_file)
 
 void read_next_directory_entry(std::ifstream &cfb_file)
 {
-    directory_entry_t direntry;
+    uint8_t dir_entry_bytes[CFB_DIR_ENTRY_SIZE];
 
-    std::cout << ">>\t\tCurrent Offset: " << cfb_file.tellg() << '\n';
+    cfb_file.read(reinterpret_cast<char *>(&dir_entry_bytes), CFB_DIR_ENTRY_SIZE);
 
-    cfb_file.read(reinterpret_cast<char *>(&direntry), sizeof(directory_entry_t));
+    directory_entry new_dir_entry(dir_entry_bytes, sizeof(dir_entry_bytes));
 
-    dir_entries.push_back(direntry);
+    dir_entries.push_back(new_dir_entry);
 }
 
 void print_directory_entry(size_t at_index)
 {
-    // -- NAME --
-    std::u16string utf16_name(dir_entries[at_index].entry_name);
-    std::wstring_convert<std::codecvt_utf8_utf16<char16_t>,char16_t> uconv;
-    std::string dir_entry_name = uconv.to_bytes(utf16_name);
-    std::cout << "Name: " << dir_entry_name << "\n";
-    
-    // -- TYPE --
-    std::cout << "Entry Type: ";
-
-    switch(dir_entries[at_index].entry_type)
-    {
-        case 0x00:
-            std::cout << "Unknown or Unallocated\n";
-            break;
-        case 0x01:
-            std::cout << "Storage Object\n";
-            break;
-        case 0x02:
-            std::cout << "Stream Object\n";
-            break;
-        case 0x05:
-            std::cout << "Root Storage Object\n";
-            break;
-    }
-
-    // -- NODE COLOR -- 
-    std::cout << "Node Color: " << (dir_entries[at_index].node_color == CF_RED ? "Red\n" : "Black\n");
-
-    // -- LEFT ENTRY --
-    std::cout << "Left Node: " << dir_entries[at_index].dir_id_left << "\n";
-
-    // -- RIGHT ENTRY --
-    std::cout << "Right Node: " << dir_entries[at_index].dir_id_right << "\n";
-
-    // -- CHILD ENTRY --
-    std::cout << "Child Entry: " << dir_entries[at_index].dir_id_root << "\n";
-
-    // -- CREATED TIME --
-    std::cout << "Created Time: " << dir_entries[at_index].created_time << "\n";
-
-    // -- MODIFIED TIME --
-    std::cout << "Modified Time: " << dir_entries[at_index].modified_time << "\n";
-
-    // -- FIRST SECTOR ID --
-    std::cout << "First Sector ID: " << dir_entries[at_index].first_sec_id << "\n";
-
-    // -- TOTAL STREAM SIZE --
-    std::cout << "Total Stream Size: " << dir_entries[at_index].total_stream_size << "\n";
-
-    std::cout << "\n\n";
-    
+    std::cout << dir_entries[at_index].get_name() << "\n";    
 }

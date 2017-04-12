@@ -6,6 +6,7 @@
 #include <codecvt>	//--|
 
 #include <vector>
+#include <valarray>
 
 #include "cfb_types.hpp"
 
@@ -27,7 +28,7 @@ void build_sat(std::ifstream &cfb_file);
 
 void build_dir_entry_chain(std::ifstream &cfb_file);
 
-std::vector<directory_entry_t> dir_entries;
+std::vector<directory_entry> dir_entries;
 
 // Read the next directory entry and push it back to the dir_entries vector
 // Returns true if it read a directory entry
