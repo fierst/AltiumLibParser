@@ -58,6 +58,14 @@ struct header_t
 // Each Directory Entry is 128 bytes in length
 const size_t CFB_DIR_ENTRY_SIZE = 128;
 
+enum dir_entry_object_type
+{
+    UNKNOWN = 0,
+    STORAGE,    
+    STREAM,
+    ROOT = 5
+};
+
 // Directory Entry class
 // Each directory entry is part of a red-black tree
 // Currently only implemented methods required for the application
@@ -81,6 +89,9 @@ public:
     // Return modification time in a human-readable string (YYYY-MM-DD hh:mm:ss)
     // TODO: Allow format specifiers?
     std::string get_modified_time();
+
+    // Get the object type of the directory entry
+    dir_entry_object_type get_object_type();
 
     // Return the sector id of the stream
     uint32_t get_stream_sector_id();

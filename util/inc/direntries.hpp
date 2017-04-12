@@ -1,14 +1,13 @@
 #include <iostream>
 #include <sstream>
 
-#include <string>	//--|
-#include <locale>	//  |-- THESE ARE ALL FOR UTF-16 PRINTING
-#include <codecvt>	//--|
+
 
 #include <vector>
 #include <valarray>
 
 #include "cfb_types.hpp"
+#include "altium_lib.hpp"
 
 #include "boost/filesystem.hpp"
 #include "boost/filesystem/fstream.hpp"
@@ -19,6 +18,7 @@
 std::vector<int32_t> sector_alloc_table;
 
 header_t header;
+
 
 // Build the header
 void build_header(std::ifstream &cfb_file);
@@ -37,6 +37,4 @@ void read_next_directory_entry(std::ifstream &cfb_file);
 
 // Prints the information for a directory entry specified by 'at_index'
 void print_directory_entry(size_t at_index);
-
-
 
