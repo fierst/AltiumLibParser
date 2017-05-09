@@ -45,7 +45,7 @@ private:
     // TODO: There must be a better way to figure out which are keywords and which are symbols/footprints...
     std::vector<std::string> altium_lib_keywords {"Library", "Models", "ModelsNoEmbed", 
                                                   "Textures", "ComponentParamsTOC", "UniqueIDPrimitiveInformation",
-                                                  "FileVersionInfo", "PadViaLibrary"};
+                                                  "FileVersionInfo", "PadViaLibrary", "ExtendedPrimitiveInformation"};
 
     // TODO: Convert to a red-black tree? That's how the CFB spec handles it...
     std::vector<directory_entry> dir_entry_tree;
